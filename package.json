@@ -1,0 +1,29 @@
+{
+  "name": "schnorr sig",
+  "version": "1.0.0",
+  "description": "",
+  "main": "t.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "bigi": "^1.4.2",
+    "ecurve-bn256": "^1.0.15",
+    "web3": "^1.7.1"
+  },
+  "devDependencies": {
+    "solidity-coverage": "^0.6.7"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "debug": "truffle debug",
+    "develop": "truffle develop",
+    "console": "truffle console",
+    "compile": "truffle compile",
+    "coverage": "truffle run coverage --network coverage",
+    "migrate": "rm -rf build && truffle migrate --network testnet"
+  },
+  "author": "",
+  "license": "ISC"
+}
