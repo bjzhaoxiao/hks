@@ -11,7 +11,7 @@ let testnet = true;
 let scAddr,url,chainId;
 
 if(testnet){
-	scAddr="0x7d4cb932B51Dde2fe7491E5021920D0b07F1005B";		
+	scAddr="0xCEF0a0D9F47267847a25C59437BCF9A65Cbaf567";		
 	url="https://api.avax-test.network/ext/bc/C/rpc";
 	chainId = 43113;
 }else{
