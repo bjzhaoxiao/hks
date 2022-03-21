@@ -24,7 +24,8 @@ async function test() {
 	  // create sig  
     console.log("\n\n===================Create sig=====================\n\n");    
     
-    let rawMsg = await getInput("Input message for schnorr signature \nexample:hello avalanche\n") || "hello avalanche";    
+    let rawMsg = await getInput("Input message for schnorr signature \nexample:hello avalanche\n") || "hello avalanche";
+    rawMsg = rawMsg.trim();
     
     console.log("rawMsg:\t\t",rawMsg);
     
@@ -61,7 +62,22 @@ async function test() {
 
      		let c = await new web3.eth.Contract(abi,scAddr);
      		
-     		sByRaw =  await getInput("Input signature(s) \nexample:0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47\n") || "0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47";				
+     		let valid = false;
+     		while(true)
+     		{
+     				sByRaw =  await getInput("Input signature(s) \nexample:0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47\n") || "0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47";
+     				if(!schnorr.isHexString(sByRaw)){
+     					console.log("Not hex string");
+     					continue;	
+     				}     				
+     				
+     				if(sByRaw.length != 66){
+     					console.log("Length is not right");
+     					continue;	
+     				}
+     				break;
+     		}		
+     		
 
      		let data = await c.methods.verify(sByRaw,"0x"+pk.slice(4,68),"0x"+pk.slice(68,132),"0x"+R.slice(4,68),"0x"+R.slice(68,132),rawMsgHashHex).encodeABI()
      		

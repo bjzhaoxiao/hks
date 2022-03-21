@@ -246,4 +246,5 @@ module.exports = {
     getSByRawMsg: getSByRawMsg,
     hashStr:hashStr,
     bufferToHexString:bufferToHexString,
+    isHexString:isHexString,
 };
