@@ -1,5 +1,5 @@
 const schnorr = require('./tools');
-const sk = new Buffer("7a077a31d1f288a43dd3d02a2a239b21dcad28b2a4f306a1325937e505bb1700", 'hex');
+const sk = Buffer.from("7a077a31d1f288a43dd3d02a2a239b21dcad28b2a4f306a1325937e505bb1700", 'hex');
 const userAddr = "0x1d001bd18a85e9830bf45047700edae5717340bc"
 
 

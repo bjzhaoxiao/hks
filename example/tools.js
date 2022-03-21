@@ -5,7 +5,7 @@ const ecurve = require('ecurve-bn256');
 const ecparams = ecurve.getCurveByName('bn256g1');
 //const ecparams = ecurve.getCurveByName('secp256k1');
 const Point = ecurve.Point;
-const Web3EthAbi 	    = require('web3-eth-abi');
+const Web3EthAbi = require('web3-eth-abi');
 const LenPtHexString = 130;
 const ByteLenOfSk = 32;
 const ErrPointNotOnCurve = "Point is not on curve";
@@ -13,7 +13,7 @@ const ErrInvalidHexString = "not a hex string";
 const ErrInvalidHexStringLen = "Invalid hex string length";
 
 // buffer
-const r 			    = new Buffer("e7e59bebdcee876e84d03832544f5a517e96a9e3f60cd8f564bece6719d5af52", 'hex');
+const r = Buffer.from("e7e59bebdcee876e84d03832544f5a517e96a9e3f60cd8f564bece6719d5af52", 'hex');
 
 // buffer
 let R = baseScarMulti(r);
@@ -42,8 +42,8 @@ function h(buff) {
 // hash
 // return:hexStr
 function hashStr(bufStr) {
-		let buff = Buffer.from(bufStr, 'utf8');		
-		//console.log("before hash",bufferToHexString(buff));
+    let buff = Buffer.from(bufStr, 'utf8');
+    //console.log("before hash",bufferToHexString(buff));
     let sha = crypto.createHash('sha256').update(buff).digest();
     //console.log("after hash",bufferToHexString(sha));
     return bufferToHexString(sha);
@@ -65,8 +65,8 @@ function getSBuff(sk, m) {
 
 // return: buffer
 function computeM1(M) {
-	
-	  //console.log("before hash(plainText)",bufferToHexString(M));	
+
+    //console.log("before hash(plainText)",bufferToHexString(M));
     let M1 = h(M);
     //console.log("after hash(plainText)",bufferToHexString(M1));
     return M1;
@@ -84,7 +84,7 @@ function computem(M1, R) {
     list.push(R.slice(1));
     // hash(M1||R)
     let m = Buffer.concat(list);
-    //console.log("before hash(M1||R)",bufferToHexString(m));    
+    //console.log("before hash(M1||R)",bufferToHexString(m));
     //console.log("after hash(M1||R)",bufferToHexString(h(m)));
     return h(m)
 }
@@ -92,9 +92,9 @@ function computem(M1, R) {
 //typesArray:['uint256','string']
 //parameters: ['2345675643', 'Hello!%']
 //return : buff
-function computeM(typesArray, parameters) {   
+function computeM(typesArray, parameters) {
     let mStrHex = Web3EthAbi.encodeParameters(typesArray, parameters);
-    return new Buffer(mStrHex.substring(2), 'hex');
+    return Buffer.from(mStrHex.substring(2), 'hex');
 }
 
 // return : hexString
@@ -125,11 +125,10 @@ function getS(sk, typesArray, parameters) {
 }
 
 function getSByRawMsg(sk, rawMsg) {
-    //let MBuff = new Buffer(removePrefix(rawMsg), 'hex'); 
-    
-    let MBuff = Buffer.from(rawMsg, 'utf8');    
-    let M1Buff = computeM1(MBuff);  
-    let mBuff = computem(M1Buff, R);    
+
+    let MBuff = Buffer.from(rawMsg, 'utf8');
+    let M1Buff = computeM1(MBuff);
+    let mBuff = computem(M1Buff, R);
     let sBuff = getSBuff(sk, mBuff);
     return bufferToHexString(sBuff);
 }
@@ -147,20 +146,20 @@ function isHexString(hexStr) {
 //  rawMessage  :hexstring
 //  pk          :hexstring
 // return true,false
-function verifySig(random, sigS, rawMessage, pk) {		
-	
+function verifySig(random, sigS, rawMessage, pk) {
+
     if (!isHexString(random)) {
         throw "random:" + ErrInvalidHexString;
     }
     if (!isHexString(sigS)) {
         throw "sigS:" + ErrInvalidHexString;
-    }    
+    }
     if (!isHexString(pk)) {
         throw "pk:" + ErrInvalidHexString;
     }
     // compute  left sG
-    let sBuffer = new Buffer(removePrefix(sigS), 'hex');
-    let left = baseScarMultiPt(sBuffer);       
+    let sBuffer = Buffer.from(removePrefix(sigS), 'hex');
+    let left = baseScarMultiPt(sBuffer);
 
     // compute  right R+m*pk
     let ptR;
@@ -177,9 +176,9 @@ function verifySig(random, sigS, rawMessage, pk) {
         throw "pk:" + ErrPointNotOnCurve;
     }
 
-    let bnm = getbnMFromRaw(random, rawMessage);    
-     
-    ptMPk = ptMPk.multiply(bnm);   
+    let bnm = getbnMFromRaw(random, rawMessage);
+
+    ptMPk = ptMPk.multiply(bnm);
 
     let right;
     right = ptR.add(ptMPk);
@@ -196,23 +195,23 @@ function verifySig(random, sigS, rawMessage, pk) {
 }
 
 function getbnMFromRaw(random, rawMsg) {
-    
-    let mBuff = getbnMFromRawBuff(random,rawMsg);
+
+    let mBuff = getbnMFromRawBuff(random, rawMsg);
     return BigInteger.fromBuffer(mBuff);
 }
 
 function getbnMFromRawBuff(random, rawMsg) {
-    let bufRandom = new Buffer(removePrefix(random), 'hex');   
-    let bufRawMsg = new Buffer(rawMsg, 'utf-8');
+    let bufRandom = Buffer.from(removePrefix(random), 'hex');
+    let bufRawMsg = Buffer.from(rawMsg, 'utf-8');
 
-    let M1Buff = computeM1(bufRawMsg);   
+    let M1Buff = computeM1(bufRawMsg);
     let mBuff = computem(M1Buff, bufRandom);
-    return mBuff;    
+    return mBuff;
 }
 
 function getbnM1FromRawHexStr(random, rawMsg) {
-    let bufRandom = new Buffer(removePrefix(random), 'hex');
-    let bufRawMsg = new Buffer(removePrefix(rawMsg), 'hex');
+    let bufRandom = Buffer.from(removePrefix(random), 'hex');
+    let bufRawMsg = Buffer.from(removePrefix(rawMsg), 'hex');
     let M1Buff = computeM1(bufRawMsg);
     return bufferToHexString(M1Buff);
 }
@@ -224,9 +223,9 @@ function ptFromHex(hexStr) {
     if (hexStrTemp.length !== LenPtHexString) {
         throw ErrInvalidHexStringLen;
     }
-    bnX = BigInteger.fromBuffer(new Buffer(hexStrTemp.substring(2, 66), 'hex'));
-    bnY = BigInteger.fromBuffer(new Buffer(hexStrTemp.substring(66, LenPtHexString), 'hex'));
-    
+    bnX = BigInteger.fromBuffer(Buffer.from(hexStrTemp.substring(2, 66), 'hex'));
+    bnY = BigInteger.fromBuffer(Buffer.from(hexStrTemp.substring(66, LenPtHexString), 'hex'));
+
     return Point.fromAffine(ecparams, bnX, bnY);
 }
 
@@ -239,12 +238,12 @@ function removePrefix(hexStr) {
     }
 }
 
-module.exports = {    
+module.exports = {
     getPKBySk: getPKBySk,
     getR: getR,
     verifySig: verifySig,
     getSByRawMsg: getSByRawMsg,
-    hashStr:hashStr,
-    bufferToHexString:bufferToHexString,
-    isHexString:isHexString,
+    hashStr: hashStr,
+    bufferToHexString: bufferToHexString,
+    isHexString: isHexString,
 };
