@@ -259,7 +259,7 @@ async function test() {
 
         let valid = false;
         while (true) {
-            sByRaw = await getInput("Input signature(s) \nexample:0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47\n") || "0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47";
+            sByRaw = await getInput("Input signature(s) \nshnorr(s):") || "0x1573a12a164f48838f2280ff73cf387325380952593d00688a53fc3743297d47";
             if (!schnorr.isHexString(sByRaw)) {
                 console.log("Not hex string");
                 continue;
